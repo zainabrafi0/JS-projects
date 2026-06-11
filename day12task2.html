@@ -6,9 +6,6 @@
   <title>Event Master Color Picker</title>
   
   <style>
-    /* ==========================================
-       CSS STYLING
-       ========================================== */
     body {
       font-family: sans-serif;
       display: flex;
@@ -91,29 +88,19 @@
   </div>
 
   <script>
-    /* ==========================================
-       JAVASCRIPT LOGIC
-       ========================================== */
     
-    // Grab all necessary DOM elements
     const form = document.getElementById('color-form');
     const hexInput = document.getElementById('hex-input');
     const swatchContainer = document.getElementById('swatch-container');
     const targetBox = document.getElementById('target-box');
     const nestedBtn = document.getElementById('nested-btn');
 
-    // Helper function to update the background color
     function updateColor(color) {
       targetBox.style.backgroundColor = color;
     }
 
-    // ==========================================
-    // 1. EVENT DELEGATION & THE EVENT OBJECT
-    // ==========================================
-    // Instead of adding a 'click' listener to every single swatch, 
-    // we add ONE listener to the parent container (delegation).
+
     swatchContainer.addEventListener('click', function(event) {
-      // event.target refers to the exact element that was clicked
       if (event.target.classList.contains('swatch')) {
         const color = event.target.getAttribute('data-color');
         updateColor(color);
@@ -121,9 +108,7 @@
       }
     });
 
-    // ==========================================
-    // 2. MOUSE EVENTS (mouseover, mouseout, dblclick)
-    // ==========================================
+
     targetBox.addEventListener('mouseover', () => {
       targetBox.style.border = '4px dashed #333';
       console.log('Mouse is over the box');
@@ -139,19 +124,13 @@
       console.log('Box reset via dblclick');
     });
 
-    // ==========================================
-    // 3. FORM EVENTS & PREVENT DEFAULT (submit)
-    // ==========================================
+ 
     form.addEventListener('submit', (event) => {
-      // event.preventDefault() stops the form from refreshing the page
       event.preventDefault(); 
       updateColor(hexInput.value);
       console.log(`Form submitted. Color changed to: ${hexInput.value}`);
     });
 
-    // ==========================================
-    // 4. INPUT & FOCUS EVENTS (focus, blur, input, change)
-    // ==========================================
     hexInput.addEventListener('focus', () => {
       console.log('Input is currently focused (active)');
     });
@@ -165,16 +144,12 @@
       console.log(`Live typing: ${event.target.value}`);
     });
 
-    // 'change' fires only when the user commits the value (e.g., clicks away or hits Enter)
     hexInput.addEventListener('change', () => {
       console.log('Input value finalized (change event triggered)');
     });
 
-    // ==========================================
-    // 5. KEYBOARD EVENTS (keydown, keyup)
-    // ==========================================
+
     hexInput.addEventListener('keydown', (event) => {
-      // You can check which key was pressed
       if (event.key === 'Enter') {
         console.log('Enter key was pressed down');
       }
@@ -184,23 +159,16 @@
       console.log(`Key released: ${event.key}`);
     });
 
-    // ==========================================
-    // 6. EVENT BUBBLING, CAPTURING & STOP PROPAGATION
-    // ==========================================
-    // Capturing Phase: Triggers on the way DOWN the DOM tree. 
-    // We enable this by passing 'true' as the third argument.
+
     targetBox.addEventListener('click', () => {
       console.log('1. Target Box Clicked (Capturing Phase)');
     }, true);
 
-    // Bubbling Phase: Triggers on the way UP the DOM tree (Default behavior).
     targetBox.addEventListener('click', () => {
       console.log('3. Target Box Clicked (Bubbling Phase)');
     });
 
-    // The nested button is INSIDE the targetBox.
     nestedBtn.addEventListener('click', (event) => {
-      // event.stopPropagation() prevents the event from bubbling up to targetBox
       event.stopPropagation(); 
       console.log('2. Nested Button Clicked - Propagation Stopped!');
       console.log('Notice how the Bubbling Phase log for the Target Box did NOT fire.');
