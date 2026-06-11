@@ -50,10 +50,6 @@
             newLi.textContent = `Dynamically Added Item ${itemCount}`;
             taskList.appendChild(newLi);
             
-            // Because we are using event delegation on 'taskList', 
-            // we DO NOT need to add an event listener to 'newLi' here!
-            
-            // Prevents this specific click from bubbling further up the DOM
             event.stopPropagation(); 
         });
     </script>
