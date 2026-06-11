@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Delegation Practice</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        #taskList { border: 1px solid #ccc; padding: 10px; width: 300px; min-height: 100px; }
+        li { padding: 8px; margin: 4px 0; background: #eee; cursor: pointer; list-style-type: none; }
+        li:hover { background: #ddd; }
+        .completed { text-decoration: line-through; color: #888; }
+        .controls { margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <h2>Event Delegation Practice</h2>
+    
+    <ul id="taskList">
+        <li>Existing Item 1</li>
+        <li>Existing Item 2</li>
+    </ul>
+
+    <div class="controls">
+        <button id="addItemBtn">Add Dynamic Item</button>
+    </div>
+
+    <script>
+        // 1. DOM Elements
+        const taskList = document.getElementById('taskList');
+        const addItemBtn = document.getElementById('addItemBtn');
+        let itemCount = 2;
+
+        // 2. EVENT DELEGATION
+        // We attach ONE listener to the <ul>. It catches clicks from all current AND future <li> elements.
+        taskList.addEventListener('click', function(event) {
+            // event.target refers to the exact element that was clicked
+            if (event.target.tagName === 'LI') {
+                // Toggle a class to cross out the item
+                event.target.classList.toggle('completed');
+                console.log('Clicked on:', event.target.textContent);
+            }
+        });
+
+        // 3. Adding Elements Dynamically
+        addItemBtn.addEventListener('click', function(event) {
+            itemCount++;
+            const newLi = document.createElement('li');
+            newLi.textContent = `Dynamically Added Item ${itemCount}`;
+            taskList.appendChild(newLi);
+            
+            // Because we are using event delegation on 'taskList', 
+            // we DO NOT need to add an event listener to 'newLi' here!
+            
+            // Prevents this specific click from bubbling further up the DOM
+            event.stopPropagation(); 
+        });
+    </script>
+</body>
+</html>

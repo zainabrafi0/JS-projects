@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Character Counter</title>
+    <style>
+        body { font-family: sans-serif; max-width: 400px; margin: 2rem auto; }
+        textarea { width: 100%; padding: 8px; box-sizing: border-box; }
+        .limit-reached { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h2>Character Counter</h2>
+    
+    <textarea id="textInput" rows="5" placeholder="Start typing here..."></textarea>
+    <p>Characters: <span id="charCount">0</span>/200</p>
+
+    <script>
+        // 1. Selecting elements
+        const textInput = document.getElementById('textInput');
+        const charCount = document.getElementById('charCount');
+        const MAX_CHARS = 200;
+
+        // 2. Event listener for live typing ('input' fires on every keystroke/paste)
+        textInput.addEventListener('input', () => {
+            const currentLength = textInput.value.length;
+            
+            // 3. Modifying content
+            charCount.textContent = currentLength;
+
+            // 4. Modifying styles dynamically (Extra credit)
+            if (currentLength >= MAX_CHARS) {
+                charCount.classList.add('limit-reached');
+                // Optional: Prevent typing past the limit using setAttribute
+                textInput.setAttribute('maxlength', MAX_CHARS);
+            } else {
+                charCount.classList.remove('limit-reached');
+            }
+        });
+    </script>
+</body>
+</html>

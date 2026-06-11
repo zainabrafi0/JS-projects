@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form Validation</title>
+  <style>
+    /* Centers the card on the page and gives a soft background */
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: #f4f7f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* The modern card container */
+    .form-card {
+      background: #ffffff;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .form-card h2 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      color: #2c3e50;
+      text-align: center;
+    }
+
+    /* ALIGNMENT MAGIC: 
+      Using CSS Grid. The first column (labels) is exactly 90px wide. 
+      The second column (inputs) takes up the remaining fraction (1fr).
+    */
+    .form-group {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      align-items: center; /* Vertically centers the label with the input box */
+      gap: 15px;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      font-weight: 500;
+      color: #34495e;
+      text-align: right; /* Pushes the text against the input field */
+    }
+
+    /* Wrapping input and error message together in the second column */
+    .input-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-wrapper input {
+      padding: 0.6rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    /* Highlight the border when the user clicks into the field */
+    .input-wrapper input:focus {
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    /* Styling the error messages from your JavaScript */
+    .error-message {
+      color: #e74c3c;
+      font-size: 0.8rem;
+      margin-top: 4px;
+      min-height: 16px; /* Prevents the form from "jumping" when an error appears */
+    }
+
+    /* Modern, fresh blue submit button */
+    .submit-btn {
+      width: 100%;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 0.8rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      margin-top: 1rem;
+    }
+
+    .submit-btn:hover {
+      background-color: #2980b9;
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98); /* Slight click effect */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-card">
+    <h2>Create Account</h2>
+    <form id="registrationForm">
+      
+      <div class="form-group">
+        <label for="name">Full Name:</label>
+        <div class="input-wrapper">
+          <input type="text" id="name" name="name" placeholder="e.g. Zainab Rafi" />
+          <span class="error-message" id="nameError"></span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <div class="input-wrapper">
+          <input type="email" id="email" name="email" placeholder="you@example.com" />
+          <span class="error-message" id="emailError"></span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <div class="input-wrapper">
+          <input type="password" id="password" name="password" placeholder="Min 8 characters" />
+          <span class="error-message" id="passwordError"></span>
+        </div>
+      </div>
+
+      <button type="submit" id="submitBtn" class="submit-btn">Register</button>
+    </form>
+  </div>
+
+  <script>
+    // Grab the form element
+    const form = document.getElementById('registrationForm');
+
+    // 1. EVENT DELEGATION & REAL-TIME VALIDATION
+    // Input events on the children "bubble up" to the form.
+    form.addEventListener('input', function(event) {
+        const target = event.target;
+        const value = target.value.trim();
+
+        if (target.id === 'name') {
+            const errorSpan = document.getElementById('nameError');
+            errorSpan.textContent = value === '' ? 'Name cannot be empty.' : '';
+        } 
+        else if (target.id === 'email') {
+            const errorSpan = document.getElementById('emailError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            errorSpan.textContent = !emailRegex.test(value) && value !== '' ? 'Please enter a valid email.' : '';
+        } 
+        else if (target.id === 'password') {
+            const errorSpan = document.getElementById('passwordError');
+            errorSpan.textContent = value.length < 8 && value !== '' ? 'Password must be at least 8 characters.' : '';
+        }
+    });
+
+    // 2. FORM SUBMISSION HANDLING
+    form.addEventListener('submit', function(event) {
+        // Prevent the page from refreshing
+        event.preventDefault(); 
+
+        // Gather values
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        let isValid = true;
+
+        // Final Validation Checks
+        if (name === '') {
+            document.getElementById('nameError').textContent = 'Name cannot be empty.';
+            isValid = false;
+        }
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            document.getElementById('emailError').textContent = 'Please enter a valid email.';
+            isValid = false;
+        }
+        
+        if (password.length < 8) {
+            document.getElementById('passwordError').textContent = 'Password must be at least 8 characters.';
+            isValid = false;
+        }
+
+        // Success Action
+        if (isValid) {
+            console.log("Form is valid! Ready to send data to server.");
+            alert("Registration Successful!");
+            form.reset(); // Clear the form
+        } else {
+            console.log("Form has errors. Fix them before submitting.");
+        }
+    });
+  </script>
+
+</body>
+</html>
